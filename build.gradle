@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.5.5'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	id 'jacoco'
 }
 
 group = 'me.hyeonic'
@@ -19,4 +20,52 @@ dependencies {
 
 test {
 	useJUnitPlatform()
+
+	finalizedBy 'jacocoTestReport'
+}
+
+// 바이너리 커버리지 결과를 사람이 읽기 좋은 형태의 리포트로 저장한다.
+jacocoTestReport {
+	reports {
+		html.enabled true
+		xml.enabled true
+	}
+
+	finalizedBy 'jacocoTestCoverageVerification'
+}
+
+// 내가 원하는 커버리지 기준을 만족하는지 확인해 주는 task
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			element = 'CLASS'
+
+			// 브랜치 커버리지를 최소한 90% 만족
+			limit {
+				counter = 'BRANCH'
+				value = 'COVEREDRATIO'
+				minimum = 0.90
+			}
+
+			// 라인 커버리지를 최소한 80% 만족시켜야 한다.
+			limit {
+				counter = 'LINE'
+				value = 'COVEREDRATIO'
+				minimum = 0.80
+			}
+
+		}
+	}
+}
+
+task testCoverage(type: Test) {
+	group 'verification'
+	description 'Runs the unit tests with coverage'
+
+	dependsOn(':test',
+			':jacocoTestReport',
+			':jacocoTestCoverageVerification')
+
+	tasks['jacocoTestReport'].mustRunAfter(tasks['test'])
+	tasks['jacocoTestCoverageVerification'].mustRunAfter(tasks['jacocoTestReport'])
 }
