@@ -15,4 +15,9 @@ public class IndexController {
     public String hello() {
         return "hello!";
     }
+
+    @GetMapping("/codecov")
+    public String codecov() {
+        return "codecov";
+    }
 }

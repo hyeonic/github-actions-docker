@@ -30,4 +30,12 @@ class IndexControllerTest {
         mockMvc.perform(get("/hello"))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    @DisplayName("GET /codecov")
+    void codecov() throws Exception {
+
+        mockMvc.perform(get("/codecov"))
+                .andExpect(status().isOk());
+    }
 }
