@@ -22,4 +22,12 @@ class IndexControllerTest {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    @DisplayName("GET /hello")
+    void hello() throws Exception {
+
+        mockMvc.perform(get("/hello"))
+                .andExpect(status().isOk());
+    }
 }
